@@ -30,7 +30,7 @@ def begin_or_default(val):
     return date(today.year, 1, 1)
 
 
-def asof_or_default(val):
+def end_or_default(val):
   if val:
     d = strptime(val, '%Y-%m-%d')
     debug(d)
