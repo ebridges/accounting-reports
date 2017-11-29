@@ -2,7 +2,7 @@
 Accounting Reports
 
 Usage:
-  accounting-reports chart-of-accounts --db=<PATH>
+  accounting-reports chart-of-accounts --db=<PATH> [--output=<FORMAT>] [--verbose]
   accounting-reports balances --db=<PATH> [--accounts=<ACCOUNTS>] [--begin=<BEGIN_DATE>] [--end=<END_DATE>] [--output=<FORMAT>] [--verbose]
   accounting-reports -h | --help
   accounting-reports --version
@@ -23,6 +23,7 @@ from .util import configure_logging, csv_to_list, filter_list, begin_or_default,
 from logging import info, debug
 from docopt import docopt
 from piecash import open_book
+from decimal import Decimal
 
 
 def account_balances(db, accounts, begin, end, output_func):
@@ -31,29 +32,39 @@ def account_balances(db, accounts, begin, end, output_func):
   with open_book(db) as book:
     acctlist = filter_list(book.accounts, accounts)
     for account in acctlist:
-        output_func(account, balance_of(account, begin, end))
+      result = {
+        'account_code' : account.code if account.code else None,
+        'account_name' : account.fullname,
+        'balance' : balance_of(account, begin, end)
+      }
+      output_func(result)
 
 
 def balance_of(account, begin, end):
   debug('balance_of account:[%s] over[%s--%s]' % (account, begin, end))
+  balance = 0
   if end:
-      balance=0
-      for split in account.splits:
-        transaction = split.transaction
-        post_date = transaction.post_date.date()
-        if post_date >= begin and post_date < end:
-          debug('post_date (%s) is between (%s--%s)' % (transaction.post_date.date(), begin, end))
-          balance += split.value * account.sign
-      return balance
+    for split in account.splits:
+      transaction = split.transaction
+      post_date = transaction.post_date.date()
+      if post_date >= begin and post_date < end:
+        debug('post_date (%s) is between (%s--%s)' % (transaction.post_date.date(), begin, end))
+        balance += split.value * account.sign
   else:
-      return account.get_balance()
+      balance = account.get_balance()
+  balance = Decimal(balance)
+  return balance.quantize(Decimal('0.01'))
 
 
-def chart_of_accounts(db):
+def chart_of_accounts(db, output_func):
   with open_book(db) as book:
-      for acc in book.accounts:
-          if(acc.code):
-            print('%d\t%s\t%s' % (int(acc.code), acc.type, acc.fullname))
+    for account in book.accounts:
+      result = {
+        'account_code' : int(account.code) if account.code else None,
+        'account_type' : account.type,
+        'account_name' : account.fullname,
+      }
+      output_func(result)
 
 
 def main():
@@ -68,7 +79,7 @@ def main():
   output_func=output_arg(args['--output'])
 
   if(args['chart-of-accounts']):
-    chart_of_accounts(db_file)
+    chart_of_accounts(db_file, output_func)
 
   if(args['balances']):
     account_balances(db_file, accounts, begin, end, output_func)

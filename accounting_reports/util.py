@@ -1,18 +1,19 @@
 from logging import basicConfig, INFO, DEBUG, debug
 from time import strptime
 from datetime import date
+from json import dumps, JSONEncoder
+from csv import DictWriter
+from sys import stdout
 from decimal import Decimal
 
 
-def output_json(account, balance):
-  bal = Decimal(balance)
-  code = 'null' if not account.code else account.code
-  print('{ "account_code": %s, "account_name", "%s", "balance", %s }' % (code, account.fullname, str(bal.quantize(Decimal('0.01')))))
+def output_json(values):
+  print(dumps(values, cls=DecimalEncoder))
 
 
-def output_csv(account, balance):
-  bal = Decimal(balance)
-  print('%s,"%s",%s' % (account.code, account.fullname, str(bal.quantize(Decimal('0.01')))))
+def output_csv(values):
+  w = DictWriter(stdout, values.keys())
+  w.writerow(values)
 
 
 def output_arg(val):
@@ -20,6 +21,13 @@ def output_arg(val):
     'csv' : output_csv,
     'json': output_json,
   }[val]
+
+
+class DecimalEncoder(JSONEncoder):
+  def default(self, o):
+    if isinstance(o, Decimal):
+      return float(o)
+    return super(DecimalEncoder, self).default(o)
 
 
 def configure_logging(level):
