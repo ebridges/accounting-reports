@@ -29,6 +29,11 @@ Options:
   --version             Show version.
 ```
 
+### Thanks
+
+* [GnuCash](https://www.gnucash.org/)
+* [Piecash](https://github.com/sdementen/piecash)
+
 ### License
 
 Copyright (c) 2017 Edward Bridges
