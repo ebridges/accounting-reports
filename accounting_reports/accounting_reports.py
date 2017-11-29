@@ -3,7 +3,7 @@ Accounting Reports
 
 Usage:
   accounting-reports chart-of-accounts --db=<PATH>
-  accounting-reports balances --db=<PATH> [--accounts=<ACCOUNTS>] [--begin=<BEGIN_DATE>] [--end=<END_DATE>] [--verbose]
+  accounting-reports balances --db=<PATH> [--accounts=<ACCOUNTS>] [--begin=<BEGIN_DATE>] [--end=<END_DATE>] [--output=<FORMAT>] [--verbose]
   accounting-reports -h | --help
   accounting-reports --version
   accounting-reports --verbose
@@ -12,20 +12,17 @@ Options:
   --accounts=<ACCOUNTS> Comma separated list of accounts to get balances for. Default: all.
   --begin=<BEGIN_DATE>  Begin date of balances (yyyy-mm-dd).  Default: first day of the year.
   --end=<END_DATE>      Date to get balances as-of (yyyy-mm-dd).  Default: last day of previous month.
+  --output=<FORMAT>     Format to output results in (csv, json). [Default: csv]
   --verbose             Verbose logging.
   -h --help             Show this screen.
   --version             Show version.
 '''
 
 from .version import __version__
-from .util import configure_logging, csv_to_list, filter_list, begin_or_default, end_or_default
+from .util import configure_logging, csv_to_list, filter_list, begin_or_default, end_or_default, output_arg
 from logging import info, debug
 from docopt import docopt
 from piecash import open_book
-
-
-def output(vals):
-  print('%s' % (vals,))
 
 
 def account_balances(db, accounts, begin, end, output_func):
@@ -34,9 +31,7 @@ def account_balances(db, accounts, begin, end, output_func):
   with open_book(db) as book:
     acctlist = filter_list(book.accounts, accounts)
     for account in acctlist:
-        balances.append( (account, balance_of(account, begin, end)) )
-    output_func(balances)
-
+        output_func(account, balance_of(account, begin, end))
 
 
 def balance_of(account, begin, end):
@@ -70,8 +65,10 @@ def main():
   begin = begin_or_default(args['--begin'])
   end = end_or_default(args['--end'])
 
+  output_func=output_arg(args['--output'])
+
   if(args['chart-of-accounts']):
     chart_of_accounts(db_file)
 
   if(args['balances']):
-    account_balances(db_file, accounts, begin, end, output)
+    account_balances(db_file, accounts, begin, end, output_func)

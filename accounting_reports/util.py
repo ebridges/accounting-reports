@@ -1,6 +1,26 @@
 from logging import basicConfig, INFO, DEBUG, debug
 from time import strptime
 from datetime import date
+from decimal import Decimal
+
+
+def output_json(account, balance):
+  bal = Decimal(balance)
+  code = 'null' if not account.code else account.code
+  print('{ "account_code": %s, "account_name", "%s", "balance", %s }' % (code, account.fullname, str(bal.quantize(Decimal('0.01')))))
+
+
+def output_csv(account, balance):
+  bal = Decimal(balance)
+  print('%s,"%s",%s' % (account.code, account.fullname, str(bal.quantize(Decimal('0.01')))))
+
+
+def output_arg(val):
+  return {
+    'csv' : output_csv,
+    'json': output_json,
+  }[val]
+
 
 def configure_logging(level):
     if not level:
