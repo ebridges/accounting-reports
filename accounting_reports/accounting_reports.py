@@ -93,11 +93,11 @@ def balance_of(account, begin, end):
   return balance.quantize(Decimal('0.01'))
 
 
-def chart_of_accounts(db, output_func):
+def chart_of_accounts(database, output_func):
   """
   Outputs the chart of accounts for the given book of accounts.
   """
-  with open_book(db) as book:
+  with open_book(database) as book:
     for account in book.accounts:
       result = {
           'account_code' : int(account.code) if account.code else None,
