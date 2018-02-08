@@ -3,11 +3,14 @@ Accounting Reports
 
 Usage:
   accounting-reports chart-of-accounts --db=<PATH> [--output=<FORMAT>] [--verbose]
-  accounting-reports balances --db=<PATH> [--accounts=<ACCOUNTS>] [--begin=<BEGIN_DATE>] [--end=<END_DATE>] [--output=<FORMAT>] [--verbose]
-  accounting-reports budget --db=<PATH> [--accounts=<ACCOUNTS>] [--begin=<BEGIN_DATE>] [--end=<END_DATE>] [--output=<FORMAT>] [--verbose]
+  accounting-reports balances --db=<PATH> [--accounts=<ACCOUNTS>] [--begin=<BEGIN_DATE>]
+                     [--end=<END_DATE>] [--output=<FORMAT>] [--verbose]
+  accounting-reports budget --db=<PATH> [--budget-account=<ACCOUNTS> | --actual-account=<ACCOUNTS>]
+                     [--begin=<BEGIN_DATE>] [--output=<FORMAT>] [--verbose]
   accounting-reports -h | --help
   accounting-reports --version
   accounting-reports --verbose
+
 Options:
   --db=<PATH>           Path to SQLite file.
   --accounts=<ACCOUNTS> Comma separated list of accounts to get balances for. Default: all.
@@ -29,13 +32,31 @@ from .util import (configure_logging, csv_to_list, filter_list, begin_or_default
                    end_or_default, output_arg)
 
 
-def budget_report(database, accounts, begin, end, output_func):
+def budget_report(database, actual_accounts, budget_accounts, begin, output_func):
   """
-  Prints a report for the given accounts and whether they're over or under budget.
+  Prints a report for the given accounts with the budgeted amount and the actual balance.
   """
-  debug('budget_report called with [%s] [%s] [%s--%s]' % (database, accounts, begin, end))
+  debug('budget_report called with [%s] [%s]' % (database, begin))
   with open_book(database) as book:
-    acctlist = filter_list(book.accounts, accounts)
+    all_accounts = book.accounts
+    acctlist = dict(zip(filter_list(all_accounts, actual_accounts),
+                   filter_list(all_accounts, budget_accounts)))
+    datelist = list_of_months_from(begin)
+
+    output_func(['date','account','budget','actual'])
+    for end_date in datelist:
+      for actual, budget in acctlist.items():
+        actual_balance = balance_of(actual, begin, end_date)
+        budget_balance = balance_of(budget, begin, end_date)
+        result = {
+            'date' : end_date.date.strftime('%Y-%m'),
+            'account_code' : account.code if account.code else None,
+            'account' : account.fullname,
+            'budget_balance': budget_balance,
+            'actual_balance': actual_balance
+        }
+        output_func(result)
+
 
 def account_balances(database, accounts, begin, end, output_func):
   """
@@ -94,17 +115,21 @@ def main():
   configure_logging(args['--verbose'])
 
   db_file = args['--db']
-  accounts = csv_to_list(args['--accounts'])
   begin = begin_or_default(args['--begin'])
-  end = end_or_default(args['--end'])
 
   output_func = output_arg(args['--output'])
 
   if args['chart-of-accounts']:
+    accounts = csv_to_list(args['--accounts'])
+    end = end_or_default(args['--end'])
     chart_of_accounts(db_file, output_func)
 
   if args['balances']:
+    accounts = csv_to_list(args['--accounts'])
+    end = end_or_default(args['--end'])
     account_balances(db_file, accounts, begin, end, output_func)
 
   if args['budget']:
-    budget_report(db_file, accounts, begin, end, output_func)
+    actual_accounts = csv_to_list(args['--actual-accounts'])
+    budget_accounts = csv_to_list(args['--budget-accounts'])
+    budget_report(db_file, actual_accounts, budget_accounts, begin, output_func)

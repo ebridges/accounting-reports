@@ -9,11 +9,11 @@ The goal of this project is to provide a user-friendly, scriptable interface to 
 
 ```
 $ accounting-reports --help
-Accounting Reports
-
-Usage:
-  accounting-reports chart-of-accounts --db=<PATH>
-  accounting-reports balances --db=<PATH> [--accounts=<ACCOUNTS>] [--begin=<BEGIN_DATE>] [--end=<END_DATE>] [--output=<FORMAT>] [--verbose]
+  accounting-reports chart-of-accounts --db=<PATH> [--output=<FORMAT>] [--verbose]
+  accounting-reports balances --db=<PATH> [--accounts=<ACCOUNTS>] [--begin=<BEGIN_DATE>]
+                     [--end=<END_DATE>] [--output=<FORMAT>] [--verbose]
+  accounting-reports budget --db=<PATH> [--budget-account=<ACCOUNTS> | --actual-account=<ACCOUNTS>]
+                     [--begin=<BEGIN_DATE>] [--output=<FORMAT>] [--verbose]
   accounting-reports -h | --help
   accounting-reports --version
   accounting-reports --verbose
@@ -26,8 +26,7 @@ Options:
   --output=<FORMAT>     Format to output results in (csv, json). [Default: csv]
   --verbose             Verbose logging.
   -h --help             Show this screen.
-  --version             Show version.
-```
+  --version             Show version.```
 
 ### Thanks
 
