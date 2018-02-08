@@ -8,7 +8,7 @@ from json import dumps, JSONEncoder
 from csv import DictWriter
 from sys import stdout
 from decimal import Decimal
-from dateutil import rrule, MONTHLY
+from dateutil import *
 
 
 def output_json(values):
