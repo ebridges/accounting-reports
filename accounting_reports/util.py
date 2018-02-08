@@ -107,7 +107,7 @@ def begin_or_default(val):
 
 def end_or_default(val):
   """
-  If `val` is empty returns the first day of this month, else returns `val` formatted as a date.
+  If `val` is empty returns the last day of this month, else returns `val` formatted as a date.
 
   Args:
       val: A date formatted as `%Y-%m-%d`. May be None.
@@ -121,9 +121,7 @@ def end_or_default(val):
     return date(parsed_date[0], parsed_date[1], parsed_date[2])
   else:
     today = date.today()
-    # return first day of this month, because comparison is
-    # to include all transactions _before_ this date
-    return date(today.year, today.month, 1)
+    return last_day_of_month(today)
 
 
 def filter_list(all_accounts, filtered_accounts):
