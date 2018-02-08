@@ -1,1 +1,4 @@
-__version__=0.2
+'''
+Defines version for this module.
+'''
+__version__ = 0.2

@@ -1,3 +1,6 @@
+'''
+Common utility functions.
+'''
 from logging import basicConfig, INFO, DEBUG, debug
 from time import strptime
 from datetime import date
@@ -18,8 +21,8 @@ def output_csv(values):
   """
   Formats the given data structure as CSV.
   """
-  w = DictWriter(stdout, values.keys())
-  w.writerow(values)
+  writer = DictWriter(stdout, values.keys())
+  writer.writerow(values)
 
 
 def output_arg(val):
@@ -71,7 +74,7 @@ def csv_to_list(val):
 
 def begin_or_default(val):
   """
-  Returns the first day of this year if `val` is None, else returns the given string formatted 
+  Returns the first day of this year if `val` is None, else returns the given string formatted
   as a `date` instance.
   """
   if val:
