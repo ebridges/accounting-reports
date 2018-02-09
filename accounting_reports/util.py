@@ -97,9 +97,8 @@ def begin_or_default(val):
   as a `date` instance.
   """
   if val:
-    d = strptime(val, '%Y-%m-%d')
-    debug(d)
-    return date(d[0], d[1], d[2])
+    parsed_date = strptime(val, '%Y-%m-%d')
+    return date(parsed_date[0], parsed_date[1], parsed_date[2])
   else:
     today = date.today()
     return date(today.year, 1, 1)
