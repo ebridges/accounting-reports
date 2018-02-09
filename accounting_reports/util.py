@@ -3,12 +3,12 @@ Common utility functions.
 '''
 from logging import basicConfig, INFO, DEBUG, debug
 from time import strptime
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from json import dumps, JSONEncoder
 from csv import DictWriter
 from sys import stdout
 from decimal import Decimal
-from dateutil import *
+from dateutil.rrule import rrule, MONTHLY
 
 
 def output_json(values):
@@ -77,8 +77,10 @@ def list_of_months_from(begin):
   """
   Returns a list of date objects beginning at the given `begin` up to the current month end.
   """
-  from_date = date(begin.year, begin.month, last_day_of_month(begin))
-  dates = map(last_day_of_month, [dt for dt in rrule(MONTHLY, bymonthday=10, dtstart=from_date)])
+  from_date = last_day_of_month(begin)
+  now = datetime.now()
+  until = datetime(now.year, now.month, now.day)
+  dates = map(last_day_of_month, [dt for dt in rrule(MONTHLY, dtstart=from_date, until=until)])
   return list(dates)
 
 
