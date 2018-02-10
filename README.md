@@ -29,6 +29,7 @@ Options:
   --verbose             Verbose logging.
   -h --help             Show this screen.
   --version             Show version.```
+```
 
 ### Thanks
 
@@ -37,5 +38,5 @@ Options:
 
 ### License
 
-Copyright (c) 2017 Edward Bridges
+Copyright (c) 2018 Edward Bridges
 [MIT License](LICENSE)
