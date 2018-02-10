@@ -73,14 +73,14 @@ def csv_to_list(val):
     return []
 
 
-def list_of_months_from(begin):
+def list_of_months_from(begin, end=datetime.now()):
   """
   Returns a list of date objects beginning at the given `begin` up to the current month end.
   """
-  from_date = last_day_of_month(begin)
-  now = datetime.now()
-  until = datetime(now.year, now.month, now.day)
-  dates = map(last_day_of_month, [dt for dt in rrule(MONTHLY, dtstart=from_date, until=until)])
+  from_date = first_day_of_month(begin)
+  until = datetime(end.year, end.month, end.day)
+  dates = map(last_day_of_month,
+              [dt for dt in rrule(MONTHLY, dtstart=from_date, bymonthday=1, until=until)])
   return list(dates)
 
 
