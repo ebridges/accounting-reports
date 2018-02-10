@@ -47,7 +47,6 @@ def budget_report(database, actual_accounts, budget_accounts, begin, output_func
                         filter_list(all_accounts, budget_accounts)))
     datelist = list_of_months_from(begin)
 
-    output_func(['date','account','budget','actual'])
     for end_date in datelist:
       for actual, budget in acctlist.items():
         actual_balance = balance_of(actual, begin, end_date)
