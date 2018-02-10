@@ -84,6 +84,13 @@ def list_of_months_from(begin):
   return list(dates)
 
 
+def first_day_of_month(val):
+  """
+  Converts the given val to the first day of the given month.
+  """
+  return datetime(val.year, val.month, 1)
+
+
 def last_day_of_month(begin_date):
   """
   Converts the given begin_date to the last day of the given month.
