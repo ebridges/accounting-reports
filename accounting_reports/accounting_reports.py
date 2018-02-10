@@ -23,7 +23,7 @@ Options:
 '''
 
 from decimal import Decimal
-from logging import info, debug
+from logging import error, info, debug
 from docopt import docopt
 from piecash import open_book
 
@@ -130,6 +130,14 @@ def main():
     account_balances(db_file, accounts, begin, end, output_func)
 
   if args['budget']:
-    actual_accounts = csv_to_list(args['--actual-accounts'])
-    budget_accounts = csv_to_list(args['--budget-accounts'])
+    actual_accounts = csv_to_list(args.get('--actual-accounts'))
+    actual_len = len(actual_accounts)
+    budget_accounts = csv_to_list(args.get('--budget-accounts'))
+    budget_len = len(budget_accounts)
+    if actual_len != budget_len:
+      error('count of actual & budget accounts must be equal.')
+      return
+    if actual_len == 0 and budget_len == 0:
+      error('no accounts specified')
+      return
     budget_report(db_file, actual_accounts, budget_accounts, begin, output_func)
