@@ -1,5 +1,7 @@
 ## Accounting Reports
 
+[![Travis CI Status](https://travis-ci.org/ebridges/accounting-reports.png?branch=master)](https://travis-ci.org/ebridges/accounting-reports)
+
 ### Overview & Goals
 Command line utility to generate standard reports from a GnuCash database in SQLite format.  Relies on [Piecash](https://github.com/sdementen/piecash) to access the database.
 
