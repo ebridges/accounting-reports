@@ -47,14 +47,14 @@ def budget_report(database, actual_accounts, budget_accounts, begin, output_func
                         filter_list(all_accounts, budget_accounts)))
     datelist = list_of_months_from(begin)
 
-    for end_date in datelist:
+    for end in datelist:
       for actual, budget in acctlist.items():
-        actual_balance = balance_of(actual, begin, end_date)
-        budget_balance = balance_of(budget, begin, end_date)
+        actual_balance = balance_of(actual, begin, end.date())
+        budget_balance = balance_of(budget, begin, end.date())
         result = {
-            'date' : end_date.date.strftime('%Y-%m'),
             'account_code' : account.code if account.code else None,
             'account' : account.fullname,
+            'date' : end.date().strftime('%Y-%m'),
             'budget_balance': budget_balance,
             'actual_balance': actual_balance
         }
@@ -72,7 +72,7 @@ def account_balances(database, accounts, begin, end, output_func):
       result = {
           'account_code' : account.code if account.code else None,
           'account_name' : account.fullname,
-          'balance' : balance_of(account, begin, end)
+          'balance' : balance_of(account, begin, end.date())
       }
       output_func(result)
 
