@@ -52,9 +52,9 @@ def budget_report(database, actual_accounts, budget_accounts, begin, output_func
         actual_balance = balance_of(actual, begin, end.date())
         budget_balance = balance_of(budget, begin, end.date())
         result = {
-            'account_code' : account.code if account.code else None,
-            'account' : account.fullname,
             'date' : end.date().strftime('%Y-%m'),
+            'account_code' : actual.code if actual.code else None,
+            'account' : actual.fullname,
             'budget_balance': budget_balance,
             'actual_balance': actual_balance
         }
