@@ -123,6 +123,7 @@ def main():
 
   output_func = output_arg(args['--output'])
 
+  info('accounting-reports called with args: [%s]' % args)
   if args['chart-of-accounts']:
     accounts = csv_to_list(args['--accounts'])
     end = end_or_default(args['--end'])
