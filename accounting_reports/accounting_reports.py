@@ -44,7 +44,7 @@ def budget_report(database, actual_accounts, budget_accounts, begin, output_func
   with open_book(database) as book:
     all_accounts = book.accounts
     acctlist = dict(zip(filter_list(all_accounts, actual_accounts),
-                   filter_list(all_accounts, budget_accounts)))
+                        filter_list(all_accounts, budget_accounts)))
     datelist = list_of_months_from(begin)
 
     output_func(['date','account','budget','actual'])
