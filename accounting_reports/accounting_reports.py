@@ -82,18 +82,18 @@ def balance_of(account, begin, end):
   """
   Returns the balance of the given account over the given date range.
   """
-  debug('balance_of account:[%s] over[%s--%s]' % (account, begin, end))
   balance = 0
   if end:
     for split in account.splits:
       transaction = split.transaction
       post_date = transaction.post_date.date()
       if post_date >= begin and post_date <= end:
-        debug('post_date (%s) is between (%s--%s)' % (transaction.post_date.date(), begin, end))
+        debug('post_date (%s) is between (%s--%s)' % (post_date, begin, end))
         balance += split.value * account.sign
   else:
       balance = account.get_balance()
   balance = Decimal(balance)
+  debug('balance_of account:[%s] over [%s--%s]: [%d]' % (account.fullname, begin, end, balance))
   return balance.quantize(Decimal('0.01'))
 
 
