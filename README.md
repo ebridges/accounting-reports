@@ -28,7 +28,7 @@ Options:
   --output=<FORMAT>     Format to output results in (csv, json). [Default: csv]
   --verbose             Verbose logging.
   -h --help             Show this screen.
-  --version             Show version.```
+  --version             Show version.
 ```
 
 ### Thanks
