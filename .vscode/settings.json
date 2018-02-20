@@ -1,3 +1,9 @@
 {
-    "python.pythonPath": "~/.virtualenvs/accounting-reports/bin/python3"
+    "python.pythonPath": "~/.virtualenvs/accounting-reports/bin/python3",
+    "files.exclude": {
+        "**/__pycache__/**": true,
+        "*.egg-info/**": true,
+        "build/**": true,
+        "dist/**": true
+      }    
 }
