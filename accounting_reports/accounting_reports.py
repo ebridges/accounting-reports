@@ -8,6 +8,7 @@ Usage:
   accounting-reports budget --db=<PATH> [--begin=<BEGIN_DATE>]
                      [--budget-accounts=<ACCOUNTS>] [--actual-accounts=<ACCOUNTS>]
                      [--output=<FORMAT>] [--verbose]
+  accounting-reports display-accounts --db=<PATH> --accounts=<ACCOUNTS> [--open-if-locked=<BOOL>]
   accounting-reports -h | --help
   accounting-reports --version
   accounting-reports --verbose
@@ -21,11 +22,13 @@ Options:
   --end=<END_DATE>             Date to get balances as-of (yyyy-mm-dd).  Default: last day of
                                previous month.
   --output=<FORMAT>            Format to output results in (csv, json). [Default: csv]
+  --open-if-locked=<BOOL>      Open the GNUCash DB if it's already open elsewhere. [Default: False]
   --verbose                    Verbose logging.
   -h --help                    Show this screen.
   --version                    Show version.
 '''
 
+from pprint import pprint
 from decimal import Decimal
 from logging import error, info, debug
 from docopt import docopt
@@ -33,7 +36,28 @@ from piecash import open_book
 
 from .version import __version__
 from .util import (configure_logging, csv_to_list, filter_list, begin_or_default,
-                   end_or_default, output_arg, list_of_months_from)
+                   end_or_default, output_arg, list_of_months_from, split_value)
+
+def display_accounts(database, accounts, open_if_lock=False):
+  """
+  Prints out detailed information about the given accounts for debugging purposes.
+  """
+  debug('displaying accounts [%s]' % (accounts))
+  with open_book(database, open_if_lock=open_if_lock) as book:
+    account_list = filter_list(book.accounts, accounts)
+    for account in account_list:
+      print('account name: %s' % account.name)
+      print('account type: %s' % account.type)
+      print('account sign: %s' % account.sign)
+      pprint(vars(account))
+      print('='*50)
+      # display the first 10 splits
+      for split in account.splits[:10]:
+        print('split transaction: %s' % split.transaction.description)
+        print('split post date: %s' % split.transaction.post_date)
+        print('split amount: %s' % split_value(split))
+        pprint(vars(split))
+        print('-'*50)
 
 
 def budget_report(database, actual_accounts, budget_accounts, begin, output_func):
@@ -145,3 +169,8 @@ def main():
       error('no accounts specified')
       return
     budget_report(db_file, actual_accounts, budget_accounts, begin, output_func)
+
+  if args['display-accounts']:
+    accounts = csv_to_list(args['--accounts'])
+    open_if_locked = args['--open-if-locked']
+    display_accounts(db_file, accounts, open_if_locked)
