@@ -5,9 +5,8 @@ Usage:
   accounting-reports chart-of-accounts --db=<PATH> [--output=<FORMAT>] [--verbose]
   accounting-reports balances --db=<PATH> [--accounts=<ACCOUNTS>] [--begin=<BEGIN_DATE>]
                      [--end=<END_DATE>] [--output=<FORMAT>] [--verbose]
-  accounting-reports budget --db=<PATH> [--begin=<BEGIN_DATE>]
-                     [--budget-accounts=<ACCOUNTS>] [--actual-accounts=<ACCOUNTS>]
-                     [--output=<FORMAT>] [--verbose]
+  accounting-reports budget --db=<PATH> --accounts=<ACCOUNTS> [--begin=<BEGIN_DATE>]
+                     [--end=<END_DATE>] [--output=<FORMAT>] [--verbose]
   accounting-reports display-accounts --db=<PATH> --accounts=<ACCOUNTS> [--open-if-locked=<BOOL>]
   accounting-reports -h | --help
   accounting-reports --version
@@ -16,8 +15,6 @@ Usage:
 Options:
   --db=<PATH>                  Path to SQLite file.
   --accounts=<ACCOUNTS>        Comma separated list of accounts. Default: all.
-  --actual-accounts=<ACCOUNTS> Comma separated list of actual accounts. Required.
-  --budget-accounts=<ACCOUNTS> Comma separated list of budget accounts. Required.
   --begin=<BEGIN_DATE>         Begin date of balances (yyyy-mm-dd).  Default: first day of the year.
   --end=<END_DATE>             Date to get balances as-of (yyyy-mm-dd).  Default: last day of
                                previous month.
@@ -60,25 +57,24 @@ def display_accounts(database, accounts, open_if_lock=False):
         print('-'*50)
 
 
-def budget_report(database, actual_accounts, budget_accounts, begin, output_func):
+def budget_report(database, accounts, begin, end, output_func):
   """
   Prints a report for the given accounts with the budgeted amount and the actual balance.
   """
   debug('budget_report called with [%s] [%s]' % (database, begin))
-  with open_book(database) as book:
+  with open_book(database, open_if_lock=True) as book:
     all_accounts = book.accounts
-    acctlist = dict(zip(filter_list(all_accounts, actual_accounts),
-                        filter_list(all_accounts, budget_accounts)))
-    datelist = list_of_months_from(begin)
+    acctlist = filter_list(all_accounts, accounts)
+    datelist = list_of_months_from(begin, end)
 
     for end in datelist:
-      for actual, budget in acctlist.items():
-        actual_balance = balance_of(actual, begin, end.date())
-        budget_balance = balance_of(budget, begin, end.date())
+      for account in acctlist:
+        (budget_balance, actual_balance) = budget_balance_of(account, begin, end.date())
+
         result = {
             'date' : end.date().strftime('%Y-%m'),
-            'account_code' : actual.code if actual.code else None,
-            'account' : actual.fullname,
+            'account_code' : account.code if account.code else None,
+            'account' : account.fullname,
             'budget_balance': budget_balance,
             'actual_balance': actual_balance
         }
@@ -99,6 +95,29 @@ def account_balances(database, accounts, begin, end, output_func):
           'balance' : balance_of(account, begin, end.date())
       }
       output_func(result)
+
+
+def budget_balance_of(account, begin, end):
+  """
+  Returns a tuple of (budgeted,actual) amounts for the given budget account.
+  """
+  budget_balance = 0
+  actual_balance = 0
+  for split in account.splits:
+    transaction = split.transaction
+    post_date = transaction.post_date.date()
+    if post_date >= begin and post_date <= end:
+      debug('post_date (%s) is between (%s--%s)' % (post_date, begin, end))
+      if split.value >= 0:
+        budget_balance += split.value
+      if split.value < 0:
+        actual_balance += split.value
+
+  budget_balance = Decimal(budget_balance)
+  actual_balance = Decimal(actual_balance)
+  debug('account:[%s] over [%s--%s]: (%d/%d)' %
+        (account.fullname, begin, end, budget_balance, actual_balance))
+  return (budget_balance.quantize(Decimal('0.01')), actual_balance.quantize(Decimal('0.01')))
 
 
 def balance_of(account, begin, end):
@@ -144,34 +163,21 @@ def main():
 
   db_file = args['--db']
   begin = begin_or_default(args['--begin'])
+  end = end_or_default(args['--end'])
+  accounts = csv_to_list(args['--accounts'])
 
   output_func = output_arg(args['--output'])
 
   info('accounting-reports called with args: [%s]' % args)
   if args['chart-of-accounts']:
-    accounts = csv_to_list(args['--accounts'])
-    end = end_or_default(args['--end'])
     chart_of_accounts(db_file, output_func)
 
   if args['balances']:
-    accounts = csv_to_list(args['--accounts'])
-    end = end_or_default(args['--end'])
     account_balances(db_file, accounts, begin, end, output_func)
 
   if args['budget']:
-    actual_accounts = csv_to_list(args.get('--actual-accounts'))
-    actual_len = len(actual_accounts)
-    budget_accounts = csv_to_list(args.get('--budget-accounts'))
-    budget_len = len(budget_accounts)
-    if actual_len != budget_len:
-      error('count of actual & budget accounts must be equal.')
-      return
-    if actual_len == 0 and budget_len == 0:
-      error('no accounts specified')
-      return
-    budget_report(db_file, actual_accounts, budget_accounts, begin, output_func)
+    budget_report(db_file, accounts, begin, end, output_func)
 
   if args['display-accounts']:
-    accounts = csv_to_list(args['--accounts'])
     open_if_locked = args['--open-if-locked']
     display_accounts(db_file, accounts, open_if_locked)
