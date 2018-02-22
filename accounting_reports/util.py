@@ -7,7 +7,7 @@ from datetime import datetime, date, timedelta
 from json import dumps, JSONEncoder
 from csv import DictWriter
 from sys import stdout
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from dateutil.rrule import rrule, MONTHLY
 
 
@@ -152,3 +152,9 @@ def filter_list(all_accounts, filtered_accounts):
       if account.fullname in filtered_accounts:
         accounts.append(account)
     return accounts
+
+def split_value(split):
+  """
+  Formats amount of the split.
+  """
+  return Decimal(split.value.quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
