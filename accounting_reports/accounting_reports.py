@@ -125,7 +125,8 @@ def chart_of_accounts(database, output_func):
   Outputs the chart of accounts for the given book of accounts.
   """
   with open_book(database) as book:
-    for account in sorted(book.accounts, key=lambda account: int(account.code) if account.code else 0 ):
+    for account in sorted(book.accounts,
+                          key=lambda account: int(account.code) if account.code else 0):
       result = {
           'account_code' : int(account.code) if account.code else None,
           'account_type' : account.type,
