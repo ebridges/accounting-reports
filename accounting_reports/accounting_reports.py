@@ -92,7 +92,7 @@ def account_balances(database, accounts, begin, end, output_func):
       result = {
           'account_code' : account.code if account.code else None,
           'account_name' : account.fullname,
-          'balance' : balance_of(account, begin, end.date())
+          'balance' : balance_of(account, begin, end)
       }
       output_func(result)
 
