@@ -25,6 +25,7 @@ Options:
   --version                    Show version.
 '''
 
+import os
 from pprint import pprint
 from decimal import Decimal
 from logging import error, info, debug
@@ -165,7 +166,11 @@ def main():
   db_file = args['--db']
   begin = begin_or_default(args['--begin'])
   end = end_or_default(args['--end'])
-  accounts = csv_to_list(args['--accounts'])
+
+  if os.path.isfile(args['--accounts']):
+    accounts = read_list_from_file(args['--accounts'])
+  else:
+    accounts = csv_to_list(args['--accounts'])
 
   output_func = output_arg(args['--output'])
 

@@ -9,6 +9,7 @@ from csv import DictWriter
 from sys import stdout
 from decimal import Decimal, ROUND_HALF_UP
 from dateutil.rrule import rrule, MONTHLY
+from pathlib import Path
 
 
 def output_json(values):
@@ -158,3 +159,8 @@ def split_value(split):
   Formats amount of the split.
   """
   return Decimal(split.value.quantize(Decimal('.01'), rounding=ROUND_HALF_UP))
+
+
+def read_list_from_file(filename):
+  p = Path(filename)
+  return p.read_text().splitlines()
