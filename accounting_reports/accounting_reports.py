@@ -71,10 +71,10 @@ def budget_report(database, accounts, begin, end, output_func):
 
         for end in datelist:
             for account in acctlist:
-                (budget_balance, actual_balance) = budget_balance_of(account, begin, end.date())
+                (budget_balance, actual_balance) = budget_balance_of(account, begin, end)
 
                 result = {
-                    'date': end.date().strftime('%Y-%m'),
+                    'date': end.strftime('%Y-%m'),
                     'account_code': account.code if account.code else None,
                     'account': account.fullname,
                     'budget_balance': budget_balance,
@@ -107,7 +107,7 @@ def budget_balance_of(account, begin, end):
     actual_balance = 0
     for split in account.splits:
         transaction = split.transaction
-        post_date = transaction.post_date.date()
+        post_date = transaction.post_date
         if begin <= post_date <= end:
             debug('post_date (%s) is between (%s--%s)' % (post_date, begin, end))
             if split.value >= 0:
@@ -130,7 +130,7 @@ def balance_of(account, begin, end):
     if end:
         for split in account.splits:
             transaction = split.transaction
-            post_date = transaction.post_date.date()
+            post_date = transaction.post_date.date
             if begin <= post_date <= end:
                 debug('post_date (%s) is between (%s--%s)' % (post_date, begin, end))
                 balance += split.value * account.sign
