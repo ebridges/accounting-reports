@@ -1,4 +1,4 @@
-'''
+"""
 Accounting Reports
 
 Usage:
@@ -23,7 +23,7 @@ Options:
   --verbose                    Verbose logging.
   -h --help                    Show this screen.
   --version                    Show version.
-'''
+"""
 
 import os
 from pprint import pprint
@@ -157,9 +157,9 @@ def chart_of_accounts(database, output_func):
 
 
 def main():
-  '''
+  """
   Application entry point.
-  '''
+  """
   args = docopt(__doc__, version=__version__)
   configure_logging(args['--verbose'])
 

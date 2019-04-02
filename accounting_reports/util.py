@@ -1,6 +1,6 @@
-'''
+"""
 Common utility functions.
-'''
+"""
 from logging import basicConfig, INFO, DEBUG, debug
 from time import strptime
 from datetime import datetime, date, timedelta
