@@ -32,7 +32,7 @@ def output_arg(val):
     Returns the proper output function given the input.
     """
     return {
-        'csv' : output_csv,
+        'csv': output_csv,
         'json': output_json,
     }[val]
 
@@ -41,6 +41,7 @@ class DecimalEncoder(JSONEncoder):
     """
     Ensures floats are properly encoded.
     """
+
     def default(self, o):
         """
         Returns an instance of the proper encoder.
@@ -98,7 +99,7 @@ def last_day_of_month(begin_date):
     """
     if begin_date.month == 12:
         return begin_date.replace(day=31)
-    return begin_date.replace(month=begin_date.month+1, day=1) - timedelta(days=1)
+    return begin_date.replace(month=begin_date.month + 1, day=1) - timedelta(days=1)
 
 
 def begin_or_default(val):

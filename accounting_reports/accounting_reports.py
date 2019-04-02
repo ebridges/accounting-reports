@@ -28,7 +28,7 @@ Options:
 import os
 from pprint import pprint
 from decimal import Decimal
-from logging import error, info, debug
+from logging import info, debug
 from docopt import docopt
 from piecash import open_book
 
@@ -41,7 +41,7 @@ def display_accounts(database, accounts, open_if_lock=False):
     """
     Prints out detailed information about the given accounts for debugging purposes.
     """
-    debug('displaying accounts [%s]' % (accounts))
+    debug('displaying accounts [%s]' % accounts)
     with open_book(database, open_if_lock=open_if_lock) as book:
         account_list = filter_list(book.accounts, accounts)
         for account in account_list:
@@ -49,14 +49,14 @@ def display_accounts(database, accounts, open_if_lock=False):
             print('account type: %s' % account.type)
             print('account sign: %s' % account.sign)
             pprint(vars(account))
-            print('='*50)
+            print('=' * 50)
             # display the first 10 splits
             for split in account.splits[:10]:
                 print('split transaction: %s' % split.transaction.description)
                 print('split post date: %s' % split.transaction.post_date)
                 print('split amount: %s' % split_value(split))
                 pprint(vars(split))
-                print('-'*50)
+                print('-' * 50)
 
 
 def budget_report(database, accounts, begin, end, output_func):
@@ -74,9 +74,9 @@ def budget_report(database, accounts, begin, end, output_func):
                 (budget_balance, actual_balance) = budget_balance_of(account, begin, end.date())
 
                 result = {
-                    'date' : end.date().strftime('%Y-%m'),
-                    'account_code' : account.code if account.code else None,
-                    'account' : account.fullname,
+                    'date': end.date().strftime('%Y-%m'),
+                    'account_code': account.code if account.code else None,
+                    'account': account.fullname,
                     'budget_balance': budget_balance,
                     'actual_balance': actual_balance
                 }
@@ -92,9 +92,9 @@ def account_balances(database, accounts, begin, end, output_func):
         acctlist = filter_list(book.accounts, accounts)
         for account in acctlist:
             result = {
-                'account_code' : account.code if account.code else None,
-                'account_name' : account.fullname,
-                'balance' : balance_of(account, begin, end)
+                'account_code': account.code if account.code else None,
+                'account_name': account.fullname,
+                'balance': balance_of(account, begin, end)
             }
             output_func(result)
 
@@ -108,7 +108,7 @@ def budget_balance_of(account, begin, end):
     for split in account.splits:
         transaction = split.transaction
         post_date = transaction.post_date.date()
-        if post_date >= begin and post_date <= end:
+        if begin <= post_date <= end:
             debug('post_date (%s) is between (%s--%s)' % (post_date, begin, end))
             if split.value >= 0:
                 budget_balance += split.value
@@ -119,7 +119,7 @@ def budget_balance_of(account, begin, end):
     actual_balance = Decimal(actual_balance)
     debug('account:[%s] over [%s--%s]: (%d/%d)' %
           (account.fullname, begin, end, budget_balance, actual_balance))
-    return (budget_balance.quantize(Decimal('0.01')), actual_balance.quantize(Decimal('0.01')))
+    return budget_balance.quantize(Decimal('0.01')), actual_balance.quantize(Decimal('0.01'))
 
 
 def balance_of(account, begin, end):
@@ -131,7 +131,7 @@ def balance_of(account, begin, end):
         for split in account.splits:
             transaction = split.transaction
             post_date = transaction.post_date.date()
-            if post_date >= begin and post_date <= end:
+            if begin <= post_date <= end:
                 debug('post_date (%s) is between (%s--%s)' % (post_date, begin, end))
                 balance += split.value * account.sign
     else:
@@ -147,11 +147,11 @@ def chart_of_accounts(database, output_func):
     """
     with open_book(database) as book:
         for account in sorted(book.accounts,
-                              key=lambda account: int(account.code) if account.code else 0):
+                              key=lambda acct: int(acct.code) if acct.code else 0):
             result = {
-                'account_code' : int(account.code) if account.code else None,
-                'account_type' : account.type,
-                'account_name' : account.fullname,
+                'account_code': int(account.code) if account.code else None,
+                'account_type': account.type,
+                'account_name': account.fullname,
             }
             output_func(result)
 
