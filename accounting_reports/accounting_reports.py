@@ -31,9 +31,10 @@ from logging import error, info, debug
 from docopt import docopt
 from piecash import open_book
 
-from .version import __version__
-from .util import (configure_logging, csv_to_list, filter_list, begin_or_default,
-                   end_or_default, output_arg, list_of_months_from, split_value)
+from version import __version__
+from util import (configure_logging, csv_to_list, filter_list, begin_or_default,
+                  end_or_default, output_arg, list_of_months_from, split_value, read_list_from_file)
+
 
 def display_accounts(database, accounts, open_if_lock=False):
   """
@@ -181,3 +182,7 @@ def main():
   if args['display-accounts']:
     open_if_locked = args['--open-if-locked']
     display_accounts(db_file, accounts, open_if_locked)
+
+
+if __name__ == '__main__':
+    main()
