@@ -134,7 +134,7 @@ def end_or_default(val):
 
 def filter_list(all_accounts, filtered_accounts):
   """
-  Returns all accounts if filtered is empty, else return acounts named in filtered_accounts
+  Returns all accounts if filtered is empty, else return accounts named in filtered_accounts
 
   Args:
       all_accounts: The list of Account objects to scan.
