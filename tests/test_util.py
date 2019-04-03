@@ -2,7 +2,7 @@
 Unit tests for util functions
 '''
 
-from datetime import datetime,date
+from datetime import date
 from unittest import TestCase, main
 from accounting_reports import util
 
@@ -16,42 +16,42 @@ class TestUtil(TestCase):
         '''
         case: normal case
         '''
-        self.assertEqual(util.last_day_of_month(datetime(2017, 1, 1)), datetime(2017, 1, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 2, 1)), datetime(2017, 2, 28))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 3, 1)), datetime(2017, 3, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 4, 1)), datetime(2017, 4, 30))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 5, 1)), datetime(2017, 5, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 6, 1)), datetime(2017, 6, 30))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 7, 1)), datetime(2017, 7, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 8, 1)), datetime(2017, 8, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 9, 1)), datetime(2017, 9, 30))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 10, 1)), datetime(2017, 10, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 11, 1)), datetime(2017, 11, 30))
-        self.assertEqual(util.last_day_of_month(datetime(2017, 12, 1)), datetime(2017, 12, 31))
+        self.assertEqual(util.last_day_of_month(date(2017, 1, 1)), date(2017, 1, 31))
+        self.assertEqual(util.last_day_of_month(date(2017, 2, 1)), date(2017, 2, 28))
+        self.assertEqual(util.last_day_of_month(date(2017, 3, 1)), date(2017, 3, 31))
+        self.assertEqual(util.last_day_of_month(date(2017, 4, 1)), date(2017, 4, 30))
+        self.assertEqual(util.last_day_of_month(date(2017, 5, 1)), date(2017, 5, 31))
+        self.assertEqual(util.last_day_of_month(date(2017, 6, 1)), date(2017, 6, 30))
+        self.assertEqual(util.last_day_of_month(date(2017, 7, 1)), date(2017, 7, 31))
+        self.assertEqual(util.last_day_of_month(date(2017, 8, 1)), date(2017, 8, 31))
+        self.assertEqual(util.last_day_of_month(date(2017, 9, 1)), date(2017, 9, 30))
+        self.assertEqual(util.last_day_of_month(date(2017, 10, 1)), date(2017, 10, 31))
+        self.assertEqual(util.last_day_of_month(date(2017, 11, 1)), date(2017, 11, 30))
+        self.assertEqual(util.last_day_of_month(date(2017, 12, 1)), date(2017, 12, 31))
 
 
     def test_last_day_of_month_leap(self):
         '''
         case: leap years
         '''
-        self.assertEqual(util.last_day_of_month(datetime(2016, 1, 1)), datetime(2016, 1, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 2, 1)), datetime(2016, 2, 29))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 3, 1)), datetime(2016, 3, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 4, 1)), datetime(2016, 4, 30))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 5, 1)), datetime(2016, 5, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 6, 1)), datetime(2016, 6, 30))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 7, 1)), datetime(2016, 7, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 8, 1)), datetime(2016, 8, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 9, 1)), datetime(2016, 9, 30))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 10, 1)), datetime(2016, 10, 31))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 11, 1)), datetime(2016, 11, 30))
-        self.assertEqual(util.last_day_of_month(datetime(2016, 12, 1)), datetime(2016, 12, 31))
+        self.assertEqual(util.last_day_of_month(date(2016, 1, 1)), date(2016, 1, 31))
+        self.assertEqual(util.last_day_of_month(date(2016, 2, 1)), date(2016, 2, 29))
+        self.assertEqual(util.last_day_of_month(date(2016, 3, 1)), date(2016, 3, 31))
+        self.assertEqual(util.last_day_of_month(date(2016, 4, 1)), date(2016, 4, 30))
+        self.assertEqual(util.last_day_of_month(date(2016, 5, 1)), date(2016, 5, 31))
+        self.assertEqual(util.last_day_of_month(date(2016, 6, 1)), date(2016, 6, 30))
+        self.assertEqual(util.last_day_of_month(date(2016, 7, 1)), date(2016, 7, 31))
+        self.assertEqual(util.last_day_of_month(date(2016, 8, 1)), date(2016, 8, 31))
+        self.assertEqual(util.last_day_of_month(date(2016, 9, 1)), date(2016, 9, 30))
+        self.assertEqual(util.last_day_of_month(date(2016, 10, 1)), date(2016, 10, 31))
+        self.assertEqual(util.last_day_of_month(date(2016, 11, 1)), date(2016, 11, 30))
+        self.assertEqual(util.last_day_of_month(date(2016, 12, 1)), date(2016, 12, 31))
 
         '''
         case: exceptional leap years
         '''
-        self.assertEqual(util.last_day_of_month(datetime(1900, 2, 1)), datetime(1900, 2, 28))
-        self.assertEqual(util.last_day_of_month(datetime(2000, 2, 1)), datetime(2000, 2, 29))
+        self.assertEqual(util.last_day_of_month(date(1900, 2, 1)), date(1900, 2, 28))
+        self.assertEqual(util.last_day_of_month(date(2000, 2, 1)), date(2000, 2, 29))
 
 
     def test_end_or_default_empty(self):
@@ -121,27 +121,27 @@ class TestUtil(TestCase):
         - handles leap years
         - properly includes begin/end dates
         '''
-        begin = datetime(2015, 12, 1)
-        end = datetime(2017, 3, 1)
+        begin = date(2015, 12, 1)
+        end = date(2017, 3, 1)
 
         actual = util.list_of_months_from(begin, end)
         self.assertEqual(len(actual), 16)
-        self.assertEqual(actual[0], datetime(2015, 12, 31))
-        self.assertEqual(actual[1], datetime(2016, 1, 31))
-        self.assertEqual(actual[2], datetime(2016, 2, 29))
-        self.assertEqual(actual[3], datetime(2016, 3, 31))
-        self.assertEqual(actual[4], datetime(2016, 4, 30))
-        self.assertEqual(actual[5], datetime(2016, 5, 31))
-        self.assertEqual(actual[6], datetime(2016, 6, 30))
-        self.assertEqual(actual[7], datetime(2016, 7, 31))
-        self.assertEqual(actual[8], datetime(2016, 8, 31))
-        self.assertEqual(actual[9], datetime(2016, 9, 30))
-        self.assertEqual(actual[10], datetime(2016, 10, 31))
-        self.assertEqual(actual[11], datetime(2016, 11, 30))
-        self.assertEqual(actual[12], datetime(2016, 12, 31))
-        self.assertEqual(actual[13], datetime(2017, 1, 31))
-        self.assertEqual(actual[14], datetime(2017, 2, 28))
-        self.assertEqual(actual[15], datetime(2017, 3, 31))
+        self.assertEqual(actual[0], date(2015, 12, 31))
+        self.assertEqual(actual[1], date(2016, 1, 31))
+        self.assertEqual(actual[2], date(2016, 2, 29))
+        self.assertEqual(actual[3], date(2016, 3, 31))
+        self.assertEqual(actual[4], date(2016, 4, 30))
+        self.assertEqual(actual[5], date(2016, 5, 31))
+        self.assertEqual(actual[6], date(2016, 6, 30))
+        self.assertEqual(actual[7], date(2016, 7, 31))
+        self.assertEqual(actual[8], date(2016, 8, 31))
+        self.assertEqual(actual[9], date(2016, 9, 30))
+        self.assertEqual(actual[10], date(2016, 10, 31))
+        self.assertEqual(actual[11], date(2016, 11, 30))
+        self.assertEqual(actual[12], date(2016, 12, 31))
+        self.assertEqual(actual[13], date(2017, 1, 31))
+        self.assertEqual(actual[14], date(2017, 2, 28))
+        self.assertEqual(actual[15], date(2017, 3, 31))
 
     def test_csv_to_list_normal(self):
         '''
