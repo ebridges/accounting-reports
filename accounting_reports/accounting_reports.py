@@ -130,7 +130,7 @@ def balance_of(account, begin, end):
     if end:
         for split in account.splits:
             transaction = split.transaction
-            post_date = transaction.post_date.date
+            post_date = transaction.post_date
             if begin <= post_date <= end:
                 debug('post_date (%s) is between (%s--%s)' % (post_date, begin, end))
                 balance += split.value * account.sign
