@@ -14,7 +14,7 @@ Usage:
 
 Options:
   --db=<PATH>                  Path to SQLite file.
-  --accounts=<ACCOUNTS>        Comma separated list of accounts. Default: all.
+  --accounts=<ACCOUNTS>        Comma separated list of accounts, or a file with a list of accounts. Default: all.
   --begin=<BEGIN_DATE>         Begin date of balances (yyyy-mm-dd).  Default: first day of the year.
   --end=<END_DATE>             Date to get balances as-of (yyyy-mm-dd).  Default: last day of
                                previous month.
@@ -167,10 +167,12 @@ def main():
     begin = begin_or_default(args['--begin'])
     end = end_or_default(args['--end'])
 
-    if os.path.isfile(args['--accounts']):
-        accounts = read_list_from_file(args['--accounts'])
-    else:
-        accounts = csv_to_list(args['--accounts'])
+    accounts=None
+    if args.get('--accounts'):
+        if os.path.isfile(args['--accounts']):
+            accounts = read_list_from_file(args['--accounts'])
+        else:
+            accounts = csv_to_list(args['--accounts'])
 
     output_func = output_arg(args['--output'])
 
