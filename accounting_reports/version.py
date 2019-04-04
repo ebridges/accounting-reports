@@ -1,4 +1,4 @@
 '''
 Defines version for this module.
 '''
-__version__=0.4
+__version__=0.5
