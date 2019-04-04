@@ -32,9 +32,12 @@ from logging import info, debug
 from docopt import docopt
 from piecash import open_book
 
-from .version import __version__
-from .util import (configure_logging, csv_to_list, filter_list, begin_or_default,
-                  end_or_default, output_arg, list_of_months_from, split_value, read_list_from_file)
+import sys
+sys.path.insert(0, os.getcwd()) # workaround for running in PyCharm
+
+from accounting_reports.version import __version__  # noqa
+from accounting_reports.util import (configure_logging, csv_to_list, filter_list, begin_or_default,
+                  end_or_default, output_arg, list_of_months_from, split_value, read_list_from_file)  # noqa
 
 
 def display_accounts(database, accounts, open_if_lock=False):
