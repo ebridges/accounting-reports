@@ -1,0 +1,5 @@
+Budgets:Expenses:Shopping:Clothing
+Budgets:Expenses:Food & Dining:Restaurants
+Budgets:Expenses:Food & Dining:Groceries
+Budgets:Expenses:Food & Dining:Coffee Shops
+Budgets:Expenses:Food & Dining:Alcohol & Bars
